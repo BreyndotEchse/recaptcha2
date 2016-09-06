@@ -116,6 +116,20 @@ class NoCaptchaService extends AbstractService
     }
 
     /**
+     * @param array $params
+     * @return NoCaptchaService
+     */
+    function setParams(array $params)
+    {
+        foreach ($this->params as $key => $param) {
+            if (array_key_exists($key, $params)) {
+                $this->params[$key] = $params[$key];
+            }
+        }
+        return $this;
+    }
+
+    /**
      * @param  array|Traversable $options
      * @throws Exception\InvalidArgumentException
      * @return NoCaptchaService

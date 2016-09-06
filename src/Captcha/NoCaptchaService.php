@@ -119,7 +119,7 @@ class NoCaptchaService extends AbstractService
      * @param array $params
      * @return NoCaptchaService
      */
-    function setParams(array $params)
+    public function setParams(array $params)
     {
         foreach ($this->params as $key => $param) {
             if (array_key_exists($key, $params)) {

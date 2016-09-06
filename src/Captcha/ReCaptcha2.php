@@ -91,8 +91,9 @@ class ReCaptcha2 extends AbstractAdapter
 
         if (!isset($service) || !$service instanceof ServiceInterface) {
             throw new Exception\DomainException(sprintf(
-                '%s expects a valid implementation of ReCaptcha2\Captcha\ServiceInterface; received "%s"',
+                '%s expects a valid implementation of %s; received "%s"',
                 __METHOD__,
+                ServiceInterface::class,
                 (is_object($service) ? get_class($service) : gettype($service))
             ));
         }

@@ -2,8 +2,10 @@
 namespace ZendTest\ReCaptcha2\Captcha;
 
 use ReCaptcha2\Captcha\NoCaptchaService;
-use ZendTest\ReCaptcha2\Captcha\TestAsset\TestHttpClient;
+use Zend\Captcha\Exception;
+use Zend\Http\Client;
 use Zend\Http\Client\Adapter\Curl;
+use ZendTest\ReCaptcha2\Captcha\TestAsset\TestHttpClient;
 
 class NoCaptchaServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,6 +27,13 @@ class NoCaptchaServiceTest extends \PHPUnit_Framework_TestCase
             $getter = 'get' . ucfirst($option);
             $this->assertEquals($captchaService->$getter(), $compare);
         }
+    }
+
+    public function testShouldCreateDefaultHttpClient()
+    {
+        $captchaService = new NoCaptchaService();
+
+        $this->assertInstanceOf(Client::class, $captchaService->getHttpClient());
     }
 
     public function testShouldAllowSpecifyingHttpClientObject()
@@ -58,6 +67,22 @@ class NoCaptchaServiceTest extends \PHPUnit_Framework_TestCase
 
         $captchaService->setHttpClient(TestHttpClient::class);
         $this->assertInstanceOf(TestHttpClient::class, $captchaService->getHttpClient());
+    }
+
+    public function testHttpClientClassDoesNotExistWillThrowException()
+    {
+        $captchaService = new NoCaptchaService();
+
+        $this->setExpectedException(Exception\InvalidArgumentException::class);
+        $captchaService->setHttpClient('RandomClassThatDoesNotExist');
+    }
+
+    public function testHttpClientClassDoesNotImpelemtInterfaceWillThrowException()
+    {
+        $captchaService = new NoCaptchaService();
+
+        $this->setExpectedException(Exception\DomainException::class);
+        $captchaService->setHttpClient(new \stdClass());
     }
 
     public function testGetServiceUri()

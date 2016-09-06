@@ -3,6 +3,7 @@ namespace ZendTest\ReCaptcha2\Captcha;
 
 use ReCaptcha2\Captcha\NoCaptchaService;
 use ReCaptcha2\Captcha\ReCaptcha2;
+use Zend\Captcha\Exception;
 use ZendTest\ReCaptcha2\Captcha\TestAsset\TestNoCaptchaService;
 
 class ReCaptcha2Test extends \PHPUnit_Framework_TestCase
@@ -12,6 +13,7 @@ class ReCaptcha2Test extends \PHPUnit_Framework_TestCase
         $options = [
             'siteKey'   => 'test:siteKey',
             'secretKey' => 'test:secretKey',
+            'service' => new TestNoCaptchaService,
         ];
         $recaptcha2 = new \ReCaptcha2\Captcha\ReCaptcha2($options);
 
@@ -19,6 +21,21 @@ class ReCaptcha2Test extends \PHPUnit_Framework_TestCase
             $getter = 'get' . ucfirst($option);
             $this->assertEquals($recaptcha2->$getter(), $compare);
         }
+    }
+
+    public function testOptionsPassedNotArrayOrTraversableWillThrowException()
+    {
+        $recaptcha2 = new ReCaptcha2();
+
+        $this->setExpectedException(Exception\InvalidArgumentException::class);
+        $recaptcha2->setOptions(new \stdClass());
+    }
+
+    public function testShouldCreateDefaultService()
+    {
+        $recaptcha2 = new ReCaptcha2();
+
+        $this->assertInstanceOf(NoCaptchaService::class, $recaptcha2->getService());
     }
 
     public function testShouldAllowSpecifyingServiceObject()
@@ -53,5 +70,35 @@ class ReCaptcha2Test extends \PHPUnit_Framework_TestCase
 
         $recaptcha2->setService(TestNoCaptchaService::class);
         $this->assertInstanceOf(TestNoCaptchaService::class, $recaptcha2->getService());
+    }
+
+    public function testServiceClassDoesNotExistWillThrowException()
+    {
+        $recaptcha2 = new ReCaptcha2();
+
+        $this->setExpectedException(Exception\InvalidArgumentException::class);
+        $recaptcha2->setService('RandomClassThatDoesNotExist');
+    }
+
+    public function testServiceClassDoesNotImpelemtInterfaceWillThrowException()
+    {
+        $recaptcha2 = new ReCaptcha2();
+
+        $this->setExpectedException(Exception\DomainException::class);
+        $recaptcha2->setService(new \stdClass());
+    }
+
+    public function testGenerateReturnsEmptyString()
+    {
+        $recaptcha2 = new ReCaptcha2();
+
+        $this->assertEquals('', $recaptcha2->generate());
+    }
+
+    public function testGetHelperName()
+    {
+        $recaptcha2 = new ReCaptcha2();
+
+        $this->assertEquals('captcha/recaptcha2', $recaptcha2->getHelperName());
     }
 }

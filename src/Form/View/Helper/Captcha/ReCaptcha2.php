@@ -32,7 +32,8 @@ class ReCaptcha2 extends FormInput
 
         if ($captcha === null || !$captcha instanceof AdapterInterface) {
             throw new Exception\DomainException(sprintf(
-                '%s requires that the element has a "captcha" attribute implementing Zend\Captcha\AdapterInterface; none found',
+                '%s requires that the element has a "captcha" attribute implementing %s; none found',
+                AdapterInterface::class,
                 __METHOD__
             ));
         }

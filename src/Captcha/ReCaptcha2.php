@@ -45,8 +45,8 @@ class ReCaptcha2 extends AbstractAdapter
             $serviceOptions = [];
             if (is_array($service)) {
                 $serviceName = NoCaptchaService::class;
-                if (isset($service['name'])) {
-                    $serviceName = $service['name'];
+                if (isset($service['class'])) {
+                    $serviceName = $service['class'];
                 }
                 if (isset($service['options'])) {
                     $serviceOptions = $service['options'];

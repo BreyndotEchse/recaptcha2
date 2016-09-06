@@ -66,8 +66,8 @@ class NoCaptchaService extends AbstractService
         $clientOptions = [];
         if (is_array($httpClient)) {
             $clientName = HttpClient::class;
-            if (isset($httpClient['name'])) {
-                $clientName = $httpClient['name'];
+            if (isset($httpClient['class'])) {
+                $clientName = $httpClient['class'];
             }
             if (isset($httpClient['options'])) {
                 $clientOptions = $httpClient['options'];

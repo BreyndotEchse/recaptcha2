@@ -45,7 +45,7 @@ class ReCaptcha2 extends FormInput
             throw new Exception\DomainException('Missing site key');
         }
 
-        $params = array_filter($service->getParams(), function($param) {
+        $params = array_filter($service->getParams(), function ($param) {
             return $param !== null;
         });
 

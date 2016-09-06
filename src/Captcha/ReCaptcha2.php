@@ -14,11 +14,11 @@ class ReCaptcha2 extends AbstractAdapter
     /**#@+
      * Error codes
      */
-    const ERROR_CAPTCHA_GENERAL   = 'error-captcha-general';
-    const MISSING_INPUT_RESPONSE = 'missing-input-response';
-    const INVALID_INPUT_RESPONSE   = 'invalid-input-response';
-    const MISSING_INPUT_SECRET = 'missing-input-secret';
-    const INVALID_INPUT_SECRET = 'invalid-input-secret';
+    const ERROR_CAPTCHA_GENERAL     = 'error-captcha-general';
+    const MISSING_INPUT_RESPONSE    = 'missing-input-response';
+    const INVALID_INPUT_RESPONSE    = 'invalid-input-response';
+    const MISSING_INPUT_SECRET      = 'missing-input-secret';
+    const INVALID_INPUT_SECRET      = 'invalid-input-secret';
     /**#@-*/
 
     /**
@@ -26,11 +26,11 @@ class ReCaptcha2 extends AbstractAdapter
      * @var array
      */
     protected $messageTemplates = [
-        self::ERROR_CAPTCHA_GENERAL   => 'Failed to validate captcha',
-        self::MISSING_INPUT_RESPONSE => 'Missing captcha fields',
-        self::INVALID_INPUT_RESPONSE   => 'Captcha value is wrong: %value%',
-        self::MISSING_INPUT_SECRET   => 'Missing captcha secret',
-        self::INVALID_INPUT_SECRET   => 'Invalid captcha secret',
+        self::ERROR_CAPTCHA_GENERAL     => 'Failed to validate captcha',
+        self::MISSING_INPUT_RESPONSE    => 'Missing captcha fields',
+        self::INVALID_INPUT_RESPONSE    => 'Captcha value is wrong: %value%',
+        self::MISSING_INPUT_SECRET      => 'Missing captcha secret',
+        self::INVALID_INPUT_SECRET      => 'Invalid captcha secret',
     ];
 
     /**

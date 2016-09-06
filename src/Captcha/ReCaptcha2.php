@@ -41,38 +41,7 @@ class ReCaptcha2 extends AbstractAdapter
     public function setOptions($options = [])
     {
         if (array_key_exists('service', $options)) {
-            $service = $options['service'];
-            $serviceOptions = [];
-            if (is_array($service)) {
-                $serviceName = NoCaptchaService::class;
-                if (isset($service['class'])) {
-                    $serviceName = $service['class'];
-                }
-                if (isset($service['options'])) {
-                    $serviceOptions = $service['options'];
-                }
-                $service = $serviceName;
-            }
-
-            if (is_string($service)) {
-                if (!class_exists($service)) {
-                    throw new Exception\InvalidArgumentException(sprintf(
-                        'Unable to locate Service class "%s"',
-                        $service
-                    ));
-                }
-                $service = new $service($serviceOptions);
-            }
-
-            if (!isset($service) || !$service instanceof ServiceInterface) {
-                throw new Exception\DomainException(sprintf(
-                    '%s expects a valid implementation of ReCaptcha2\Captcha\ServiceInterface; received "%s"',
-                    __METHOD__,
-                    (is_object($service) ? get_class($service) : gettype($service))
-                ));
-            }
-
-            $this->setService($service);
+            $this->setService($options['service']);
             unset($options['service']);
         }
 
@@ -93,11 +62,40 @@ class ReCaptcha2 extends AbstractAdapter
     }
 
     /**
-     * @param ServiceInterface $service
+     * @param array|\Traversable|ServiceInterface $service
      * @return ReCaptcha2
      */
-    public function setService(ServiceInterface $service)
+    public function setService($service)
     {
+        $serviceOptions = [];
+        if (is_array($service)) {
+            $serviceName = NoCaptchaService::class;
+            if (isset($service['class'])) {
+                $serviceName = $service['class'];
+            }
+            if (isset($service['options'])) {
+                $serviceOptions = $service['options'];
+            }
+            $service = $serviceName;
+        }
+
+        if (is_string($service)) {
+            if (!class_exists($service)) {
+                throw new Exception\InvalidArgumentException(sprintf(
+                    'Unable to locate Service class "%s"',
+                    $service
+                ));
+            }
+            $service = new $service($serviceOptions);
+        }
+
+        if (!isset($service) || !$service instanceof ServiceInterface) {
+            throw new Exception\DomainException(sprintf(
+                '%s expects a valid implementation of ReCaptcha2\Captcha\ServiceInterface; received "%s"',
+                __METHOD__,
+                (is_object($service) ? get_class($service) : gettype($service))
+            ));
+        }
         $this->service = $service;
         return $this;
     }

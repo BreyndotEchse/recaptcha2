@@ -35,6 +35,12 @@ class NoCaptchaServiceTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testOptionsPassedNotArrayOrTraversableWillThrowException()
+    {
+        $this->setExpectedException(Exception\InvalidArgumentException::class);
+        $this->captchaService->setOptions(new \stdClass());
+    }
+
     public function testShouldCreateDefaultHttpClient()
     {
         $this->assertInstanceOf(Client::class, $this->captchaService->getHttpClient());

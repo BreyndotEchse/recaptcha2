@@ -4,7 +4,6 @@ namespace ZendTest\ReCaptcha2\Captcha;
 use ReCaptcha2\Captcha\Result;
 use Zend\Http\Response;
 
-
 class ResultTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructorShouldSetHttpResponse()

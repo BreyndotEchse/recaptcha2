@@ -76,7 +76,7 @@ HTML;
   <div style="width: 302px; height: 422px;">
     <div style="width: 302px; height: 422px; position: relative;">
       <div style="width: 302px; height: 422px; position: absolute;">
-        <iframe src="{$apiPath}/fallback?{$queryString}k={$this->siteKey}"
+        <iframe src="{$apiPath}/fallback?{$queryString}k={$siteKey}"
                 frameborder="0" scrolling="no"
                 style="width: 302px; height:422px; border-style: none;">
         </iframe>

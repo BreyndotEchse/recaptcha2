@@ -142,9 +142,7 @@ class NoCaptchaService extends AbstractService
 
         foreach ($options as $name => $option) {
             $fname = 'set' . ucfirst($name);
-            if (($name != 'setOptions') && method_exists($this, $name)) {
-                $this->{$name}($option);
-            } elseif (($fname != 'setOptions') && method_exists($this, $fname)) {
+            if (($fname != 'setOptions') && method_exists($this, $fname)) {
                 $this->{$fname}($option);
             }
         }

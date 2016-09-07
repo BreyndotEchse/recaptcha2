@@ -28,7 +28,10 @@ class ReCaptcha2Test extends \PHPUnit_Framework_TestCase
             ->method('getCaptcha')
             ->willReturn(null);
 
-        $this->setExpectedException(Exception\DomainException::class, 'requires that the element has a "captcha" attribute implementing');
+        $this->setExpectedException(
+            Exception\DomainException::class,
+            'requires that the element has a "captcha" attribute implementing'
+        );
         $this->helper->render($captchaMock);
     }
 
@@ -71,6 +74,9 @@ class ReCaptcha2Test extends \PHPUnit_Framework_TestCase
         $result = $helper($captchaMock);
         $this->assertContains('<input type="hidden" name="test-name"', $result);
         $this->assertContains('<div data-theme="dark" class="g-recaptcha" data-sitekey="test-site-key"', $result);
-        $this->assertContains(sprintf('<iframe src="%s/fallback?render=test-param-render&amp;k=test-site-key"', NoCaptchaService::API_SERVER), $result);
+        $this->assertContains(sprintf(
+            '<iframe src="%s/fallback?render=test-param-render&amp;k=test-site-key"',
+            NoCaptchaService::API_SERVER
+        ), $result);
     }
 }

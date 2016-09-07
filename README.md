@@ -1,7 +1,8 @@
-# reCAPTCHA 2.0 Module ("NoCaptcha") for Zend Framework 2.7+ and Zend Framework 3
+# reCAPTCHA 2.0 ("NoCaptcha") Module for Zend Framework 2 and Zend Framework 3
 
 [![Build Status](https://travis-ci.org/BreyndotEchse/recaptcha2.svg?branch=master)](https://travis-ci.org/BreyndotEchse/recaptcha2)
 [![Coverage Status](https://coveralls.io/repos/github/BreyndotEchse/recaptcha2/badge.svg?branch=master)](https://coveralls.io/github/BreyndotEchse/recaptcha2?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/BreyndotEchse/recaptcha2/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/BreyndotEchse/recaptcha2/?branch=master)
 
 ## Installation
 

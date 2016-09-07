@@ -16,11 +16,11 @@
     },
     "require": {
         "php": "^5.5 || ^7.0",
-        "zendframework/zend-captcha": "^2.5",
-        "zendframework/zend-http": "^2.5",
-        "zendframework/zend-form": "^2.5",
-        "zendframework/zend-view": "^2.5",
-        "zendframework/zend-i18n": "^2.5"
+        "zendframework/zend-captcha": "^2.2.3",
+        "zendframework/zend-http": "^2.2.3",
+        "zendframework/zend-form": "^2.2.3",
+        "zendframework/zend-view": "^2.2.3",
+        "zendframework/zend-i18n": "^2.2.3"
     },
     "require-dev": {
         "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",

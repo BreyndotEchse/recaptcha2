@@ -31,7 +31,7 @@ interface ServiceInterface
     public function getParams();
 
     /**
-     * @return array
+     * @return string
      */
     public function getServiceUri();
 }

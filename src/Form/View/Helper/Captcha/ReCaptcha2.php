@@ -1,7 +1,9 @@
 <?php
 namespace ReCaptcha2\Form\View\Helper\Captcha;
 
+use Traversable;
 use Zend\Captcha\AdapterInterface;
+use Zend\Form\Element\Captcha;
 use Zend\Form\ElementInterface;
 use Zend\Form\Exception;
 use Zend\Form\View\Helper\FormInput;
@@ -28,6 +30,13 @@ class ReCaptcha2 extends FormInput
      */
     public function render(ElementInterface $element)
     {
+        if (!$element instanceof Captcha) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s expects a valid implementation of Zend\Form\Element\Captcha; received "%s"',
+                __METHOD__,
+                (is_object($element) ? get_class($element) : gettype($element))
+            ));
+        }
         $captcha = $element->getCaptcha();
 
         if ($captcha === null || !$captcha instanceof AdapterInterface) {
@@ -53,12 +62,16 @@ class ReCaptcha2 extends FormInput
         $apiPath = $service->getServiceUri();
         $scriptPath = sprintf('%s.js', $apiPath);
         $queryString = '';
-        if ($params) {
+        if (!empty($params)) {
             $queryString = http_build_query($params, '', '&amp;');
             $scriptPath .= '?' . $queryString;
         }
 
         $attributes = $element->getAttributes();
+        if ($attributes instanceof Traversable) {
+            $attributes = iterator_to_array($attributes);
+        }
+
         $attributes['class'] = 'g-recaptcha';
         $attributes['data-sitekey'] = $siteKey;
         $attributeString = $this->createAttributesString($attributes);

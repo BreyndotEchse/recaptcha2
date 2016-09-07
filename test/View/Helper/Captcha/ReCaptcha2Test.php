@@ -5,6 +5,7 @@ use ReCaptcha2\Captcha\NoCaptchaService;
 use ReCaptcha2\Captcha\ReCaptcha2;
 use ReCaptcha2\Form\View\Helper\Captcha\ReCaptcha2 as ReCaptcha2ViewHelper;
 use Zend\Form\Element\Captcha;
+use Zend\Form\Element\Text;
 use Zend\Form\Exception;
 
 class ReCaptcha2Test extends \PHPUnit_Framework_TestCase
@@ -19,6 +20,15 @@ class ReCaptcha2Test extends \PHPUnit_Framework_TestCase
     {
         $helper = $this->helper;
         $this->assertSame($this->helper, $helper());
+    }
+
+    public function testRenderWithAnotherFormElementWillThrowException()
+    {
+        $this->setExpectedException(
+            Exception\InvalidArgumentException::class,
+            'expects a valid implementation of Zend\Form\Element\Captcha; received'
+        );
+        $this->helper->render(new Text);
     }
 
     public function testRenderWithoutCaptchaServiceWillThrowException()

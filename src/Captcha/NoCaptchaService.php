@@ -31,7 +31,7 @@ class NoCaptchaService extends AbstractService
     protected $httpClient;
 
     /**
-     * @param array|\Traversable $options
+     * @param array|Traversable $options
      */
     public function __construct($options = [])
     {

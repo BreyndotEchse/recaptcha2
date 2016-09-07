@@ -179,7 +179,6 @@ class ReCaptcha2 extends AbstractAdapter
             if ($errorCodes) {
                 foreach ($errorCodes as $errorCode) {
                     $this->error(self::INVALID_INPUT_RESPONSE, $errorCode);
-                    $service->setParam('error', $errorCode);
                 }
                 return false;
             }

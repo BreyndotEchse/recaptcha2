@@ -3,11 +3,17 @@ namespace ZendTest\ReCaptcha2\Captcha;
 
 use ReCaptcha2\Captcha\NoCaptchaService;
 use ReCaptcha2\Captcha\ReCaptcha2;
+use ReCaptcha2\Captcha\Result;
 use Zend\Captcha\Exception;
 use ZendTest\ReCaptcha2\Captcha\TestAsset\TestNoCaptchaService;
 
 class ReCaptcha2Test extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        $this->reCaptcha2 = new ReCaptcha2();
+    }
+
     public function testConstructorShouldSetOptions()
     {
         $options = [
@@ -15,7 +21,7 @@ class ReCaptcha2Test extends \PHPUnit_Framework_TestCase
             'secretKey' => 'test:secretKey',
             'service' => new TestNoCaptchaService,
         ];
-        $recaptcha2 = new \ReCaptcha2\Captcha\ReCaptcha2($options);
+        $recaptcha2 = new ReCaptcha2($options);
 
         foreach ($options as $option => $compare) {
             $getter = 'get' . ucfirst($option);
@@ -25,80 +31,165 @@ class ReCaptcha2Test extends \PHPUnit_Framework_TestCase
 
     public function testOptionsPassedNotArrayOrTraversableWillThrowException()
     {
-        $recaptcha2 = new ReCaptcha2();
-
         $this->setExpectedException(Exception\InvalidArgumentException::class);
-        $recaptcha2->setOptions(new \stdClass());
+        $this->reCaptcha2->setOptions(new \stdClass());
     }
 
     public function testShouldCreateDefaultService()
     {
-        $recaptcha2 = new ReCaptcha2();
-
-        $this->assertInstanceOf(NoCaptchaService::class, $recaptcha2->getService());
+        $this->assertInstanceOf(NoCaptchaService::class, $this->reCaptcha2->getService());
     }
 
     public function testShouldAllowSpecifyingServiceObject()
     {
-        $recaptcha2 = new ReCaptcha2();
         $captchaService = new TestNoCaptchaService;
 
-        $recaptcha2->setService($captchaService);
-        $this->assertSame($captchaService, $recaptcha2->getService());
+        $this->reCaptcha2->setService($captchaService);
+        $this->assertSame($captchaService, $this->reCaptcha2->getService());
     }
 
     public function testShouldAllowSpecifyingServiceArray()
     {
-        $recaptcha2 = new ReCaptcha2();
-
         $ipTestValue = 'ip:test';
-        $recaptcha2->setService([
+        $this->reCaptcha2->setService([
             'class' => TestNoCaptchaService::class,
             'options' => [
                 'ip' => $ipTestValue,
             ],
         ]);
 
-        $captchaService = $recaptcha2->getService();
+        $captchaService = $this->reCaptcha2->getService();
         $this->assertInstanceOf(TestNoCaptchaService::class, $captchaService);
         $this->assertEquals($ipTestValue, $captchaService->getIp());
     }
 
     public function testShouldAllowSpecifyingServiceString()
     {
-        $recaptcha2 = new ReCaptcha2();
-
-        $recaptcha2->setService(TestNoCaptchaService::class);
-        $this->assertInstanceOf(TestNoCaptchaService::class, $recaptcha2->getService());
+        $this->reCaptcha2->setService(TestNoCaptchaService::class);
+        $this->assertInstanceOf(TestNoCaptchaService::class, $this->reCaptcha2->getService());
     }
 
     public function testServiceClassDoesNotExistWillThrowException()
     {
-        $recaptcha2 = new ReCaptcha2();
-
         $this->setExpectedException(Exception\InvalidArgumentException::class);
-        $recaptcha2->setService('RandomClassThatDoesNotExist');
+        $this->reCaptcha2->setService('RandomClassThatDoesNotExist');
     }
 
     public function testServiceClassDoesNotImpelemtInterfaceWillThrowException()
     {
-        $recaptcha2 = new ReCaptcha2();
-
         $this->setExpectedException(Exception\DomainException::class);
-        $recaptcha2->setService(new \stdClass());
+        $this->reCaptcha2->setService(new \stdClass());
     }
 
     public function testGenerateReturnsEmptyString()
     {
-        $recaptcha2 = new ReCaptcha2();
-
-        $this->assertEquals('', $recaptcha2->generate());
+        $this->assertEquals('', $this->reCaptcha2->generate());
     }
 
     public function testGetHelperName()
     {
-        $recaptcha2 = new ReCaptcha2();
+        $this->assertEquals('captcha/recaptcha2', $this->reCaptcha2->getHelperName());
+    }
 
-        $this->assertEquals('captcha/recaptcha2', $recaptcha2->getHelperName());
+    public function testIsValidReturnsFalseWithoutValueOrContext()
+    {
+        $this->assertFalse($this->reCaptcha2->isValid('', ''));
+
+        $messages = $this->reCaptcha2->getMessages();
+        $this->assertArrayHasKey(ReCaptcha2::MISSING_INPUT_RESPONSE, $messages);
+        $this->assertCount(1, $messages);
+    }
+
+    public function testIsValidReturnsFalseWithoutResponseValue()
+    {
+        $this->assertFalse($this->reCaptcha2->isValid('foo', []));
+
+        $messages = $this->reCaptcha2->getMessages();
+        $this->assertArrayHasKey(ReCaptcha2::MISSING_INPUT_RESPONSE, $messages);
+        $this->assertCount(1, $messages);
+    }
+
+    public function testIsValidReturnsFalseWhenServiceVerifyReturnsEmpty()
+    {
+        $serviceMock = $this->getMock(NoCaptchaService::class, ['verify'], [], '', false);
+        $serviceMock->expects($this->once())
+            ->method('verify')
+            ->willReturn(null);
+
+        $this->reCaptcha2->setService($serviceMock);
+
+        $this->assertFalse($this->reCaptcha2->isValid('foo', ['g-recaptcha-response' => 'bar']));
+
+        $messages = $this->reCaptcha2->getMessages();
+        $this->assertArrayHasKey(ReCaptcha2::ERROR_CAPTCHA_GENERAL, $messages);
+        $this->assertCount(1, $messages);
+    }
+
+    public function testIsValidReturnsFalseWhenServiceIsValidReturnsFalse()
+    {
+        $resultMock = $this->getMock(Result::class, ['isValid', 'getErrorCodes']);
+        $resultMock->expects($this->once())
+            ->method('isValid')
+            ->willReturn(false);
+        $resultMock->expects($this->once())
+            ->method('getErrorCodes')
+            ->willReturn(null);
+
+        $serviceMock = $this->getMock(NoCaptchaService::class, ['verify'], [], '', false);
+        $serviceMock->expects($this->once())
+            ->method('verify')
+            ->willReturn($resultMock);
+
+        $this->reCaptcha2->setService($serviceMock);
+
+        $this->assertFalse($this->reCaptcha2->isValid('foo', ['g-recaptcha-response' => 'bar']));
+
+        $messages = $this->reCaptcha2->getMessages();
+        $this->assertArrayHasKey(ReCaptcha2::ERROR_CAPTCHA_GENERAL, $messages);
+        $this->assertCount(1, $messages);
+    }
+
+    public function testIsValidReturnsFalseWhenServiceIsValidReturnsFalseWithResultMessage()
+    {
+        $resultMock = $this->getMock(Result::class, ['isValid', 'getErrorCodes']);
+        $resultMock->expects($this->once())
+            ->method('isValid')
+            ->willReturn(false);
+        $resultMock->expects($this->once())
+            ->method('getErrorCodes')
+            ->willReturn(['test-error-code']);
+
+        $serviceMock = $this->getMock(NoCaptchaService::class, ['verify'], [], '', false);
+        $serviceMock->expects($this->once())
+            ->method('verify')
+            ->willReturn($resultMock);
+
+        $this->reCaptcha2->setService($serviceMock);
+
+        $this->assertFalse($this->reCaptcha2->isValid('foo', ['g-recaptcha-response' => 'bar']));
+
+        $messages = $this->reCaptcha2->getMessages();
+        $this->assertArrayHasKey(ReCaptcha2::INVALID_INPUT_RESPONSE, $messages);
+        $this->assertCount(1, $messages);
+    }
+
+    public function testIsValidReturnsTrueWhenServiceIsValidReturnsTrue()
+    {
+        $resultMock = $this->getMock(Result::class, ['isValid']);
+        $resultMock->expects($this->once())
+            ->method('isValid')
+            ->willReturn(true);
+
+        $serviceMock = $this->getMock(NoCaptchaService::class, ['verify'], [], '', false);
+        $serviceMock->expects($this->once())
+            ->method('verify')
+            ->willReturn($resultMock);
+
+        $this->reCaptcha2->setService($serviceMock);
+
+        $this->assertTrue($this->reCaptcha2->isValid('foo', ['g-recaptcha-response' => 'bar']));
+
+        $messages = $this->reCaptcha2->getMessages();
+        $this->assertCount(0, $messages);
     }
 }

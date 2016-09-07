@@ -1,6 +1,7 @@
 <?php
 namespace ReCaptcha2\Captcha;
 
+use Traversable;
 use Zend\Captcha\Exception;
 use Zend\Http\Client as HttpClient;
 

@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/BreyndotEchse/recaptcha2.svg?branch=master)](https://travis-ci.org/BreyndotEchse/recaptcha2)
 [![Coverage Status](https://coveralls.io/repos/github/BreyndotEchse/recaptcha2/badge.svg?branch=master)](https://coveralls.io/github/BreyndotEchse/recaptcha2?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/BreyndotEchse/recaptcha2/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/BreyndotEchse/recaptcha2/?branch=master)
+[![Packagist](https://img.shields.io/packagist/v/breyndotechse/recaptcha2.svg)](https://packagist.org/packages/breyndotechse/recaptcha2)
 
 ## Installation
 
@@ -113,7 +114,3 @@ $form->add([
     ],
 ]);
 ```
-
-## Unit Tests
-
-Coming soon

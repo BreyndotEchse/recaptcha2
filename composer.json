@@ -1,9 +1,13 @@
 {
     "name": "breyndotechse/recaptcha2",
-    "description": " ",
+    "description": "reCAPTCHA 2.0 (\"NoCaptcha\") Module for Zend Framework 2 and Zend Framework 3",
     "license": "BSD-3-Clause",
     "keywords": [
+        "zendframework",
+        "zend",
+        "framework",
         "zf2",
+        "zf3",
         "captcha",
         "recaptcha",
         "nocaptcha"

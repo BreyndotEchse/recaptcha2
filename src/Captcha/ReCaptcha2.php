@@ -69,20 +69,14 @@ class ReCaptcha2 extends AbstractAdapter
     {
         $serviceOptions = [];
         if (is_array($service)) {
-            $serviceName = NoCaptchaService::class;
-            if (isset($service['class'])) {
-                $serviceName = $service['class'];
-            }
-            if (isset($service['options'])) {
-                $serviceOptions = $service['options'];
-            }
-            $service = $serviceName;
+            $serviceOptions = isset($service['options']) ? $service['options'] : [];
+            $service        = isset($service['class']) ? $service['class'] : NoCaptchaService::class;
         }
 
         if (is_string($service)) {
             if (!class_exists($service)) {
                 throw new Exception\InvalidArgumentException(sprintf(
-                    'Unable to locate Service class "%s"',
+                    'Unable to locate service class "%s"',
                     $service
                 ));
             }

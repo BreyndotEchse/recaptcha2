@@ -1,6 +1,7 @@
 <?php
 namespace ZendTest\ReCaptcha2\View\Helper\Captcha;
 
+use ArrayObject;
 use ReCaptcha2\Captcha\NoCaptchaService;
 use ReCaptcha2\Captcha\ReCaptcha2;
 use ReCaptcha2\Form\View\Helper\Captcha\ReCaptcha2 as ReCaptcha2ViewHelper;
@@ -58,12 +59,13 @@ class ReCaptcha2Test extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        $noCaptchaService = new NoCaptchaService([
+        $config = new ArrayObject([
             'siteKey' => 'test-site-key',
             'params' => [
                 'render' => 'test-param-render',
             ],
         ]);
+        $noCaptchaService = new NoCaptchaService($config);
         $reCaptcha2Mock = $this->getMock(ReCaptcha2::class, ['getService']);
         $reCaptcha2Mock->expects($this->once())
             ->method('getService')
